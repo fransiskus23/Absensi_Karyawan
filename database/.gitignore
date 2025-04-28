@@ -1,0 +1,15 @@
+*.sqlite*
+
+# Ignore node_modules
+node_modules/
+
+# Ignore .env files
+.env
+
+# Laravel-specific ignores (opsional)
+/vendor/
+/.idea/
+/storage/*.key
+/.vscode/
+/npm-debug.log
+/yarn-error.log
