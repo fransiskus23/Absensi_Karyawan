@@ -45,6 +45,7 @@ Route::middleware(['auth'])->group(function () {
 
 
     // Jadwal Kerja
-    Route::get('jadwal-kerja/read', [JadwalKerjaController::class, 'read'])->name('jadwal.read');
-
+    Route::get('jadwal-kerja', [JadwalKerjaController::class, 'index'])->name('jadwal-kerja.index');
+    Route::post('/jadwal-kerja/upload', [JadwalKerjaController::class, 'upload'])->name('jadwal.upload');
+    Route::get('jadwal/download', [JadwalKerjaController::class, 'download'])->name('jadwal.download');
 });

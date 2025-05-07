@@ -101,10 +101,10 @@
             @if(auth()->user()->role == 'admin')
             <a href="{{ route('karyawan.index') }}"><i class="fas fa-user-plus mr-2"></i> Tambah Karyawan</a>
             <a href="{{ route('absensi.index') }}"><i class="fas fa-calendar-check mr-2"></i> Absensi</a>
-            <a href="#"><i class="fas fa-calendar-alt mr-2"></i> Jadwal Kerja</a>
+            <a href="{{ route('jadwal-kerja.index') }}"><i class="fas fa-calendar-alt mr-2"></i> Jadwal Kerja</a>
             @else
             <a href="{{ route('absensi.index') }}"><i class="fas fa-calendar-check mr-2"></i> Absensi</a>
-            <a href="#"><i class="fas fa-calendar-alt mr-2"></i> Jadwal Kerja</a>
+            <a href="{{ route('jadwal-kerja.index') }}"><i class="fas fa-calendar-alt mr-2"></i> Jadwal Kerja</a>
             @endif
         </div>
 
