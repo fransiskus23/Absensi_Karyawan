@@ -81,16 +81,21 @@ class AbsensiController extends Controller
 
         $now = Carbon::now();
 
-        if ($now->lessThan(Carbon::today()->addHours(17))) {
+        if ($now->lessThan(Carbon::today()->addHours(12))) {
             return redirect()->back()->with('error', 'Check-Out hanya bisa dilakukan setelah jam 17:00.');
         }
 
+        // Simpan data jam check-out (opsional, bisa dihapus juga)
         $absensi->update([
             'check_out' => $now->format('H:i:s'),
         ]);
 
-        return redirect()->back()->with('success', 'Check-Out berhasil.');
+        // Hapus data absensi setelah check-out
+        $absensi->delete();
+
+        return redirect()->back()->with('success', 'Check-Out berhasil dan data absensi dihapus.');
     }
+
 
     public function markTidakHadir(Request $request)
     {
@@ -110,18 +115,35 @@ class AbsensiController extends Controller
                 return redirect()->back()->with('error', 'Anda sudah Check-In hari ini, tidak bisa menandai Tidak Hadir.');
             }
 
-            if ($existing->status_absensi == 'Tidak Hadir') {
+            if (in_array($existing->status_absensi, ['sakit', 'izin', 'alpha'])) {
                 return redirect()->back()->with('error', 'Anda sudah menandai Tidak Hadir hari ini.');
             }
         }
 
+        // Mapping agar sesuai enum database
+        $statusMap = [
+            'Sakit' => 'sakit',
+            'Izin' => 'izin',
+            'Alfa' => 'alpha',
+        ];
+
+        // Simpan data absensi
         Absensi::updateOrCreate(
             ['user_id' => $user->id, 'tanggal' => $today],
             [
-                'status_absensi' => 'Tidak Hadir',
+                'status_absensi' => $statusMap[$request->keterangan],
                 'keterangan' => $request->keterangan,
             ]
         );
+
+        if (Carbon::now()->greaterThan(Carbon::today()->addHours(12))) {
+            Absensi::where('user_id', $user->id)
+                ->where('tanggal', $today)
+                ->whereIn('status_absensi', ['sakit', 'izin', 'alpha'])
+                ->delete();
+
+            return back()->with('success', 'Status Tidak Hadir ditandai dan dihapus otomatis karena lewat jam 12 siang.');
+        }
 
         return back()->with('success', 'Status ketidakhadiran berhasil ditandai.');
     }

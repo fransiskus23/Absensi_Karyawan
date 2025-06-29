@@ -12,7 +12,7 @@
 <body>
     <div class="container"><br>
         <div class="col-md-4 col-md-offset-4">
-            <h2 class="text-center"><b>PRESENSI</b><br>Aplikasi Absensi</h3>
+            <h2 class="text-center"><b>PRESENSI</b><br>Aplikasi Absensi</h2>
                 <hr>
                 @if(session('error'))
                 <div class="alert alert-danger">
@@ -30,8 +30,7 @@
                         <input type="password" name="password" class="form-control" placeholder="Password" required="">
                     </div>
                     <button type="submit" class="btn btn-primary btn-block">Log In</button>
-                    <hr>
-                    <p class="text-center">Belum punya akun? <a href="#">Register</a> sekarang!</p>
+
                 </form>
         </div>
     </div>

@@ -45,7 +45,13 @@ Route::middleware(['auth'])->group(function () {
 
 
     // Jadwal Kerja
-    Route::get('jadwal-kerja', [JadwalKerjaController::class, 'index'])->name('jadwal-kerja.index');
-    Route::post('/jadwal-kerja/upload', [JadwalKerjaController::class, 'upload'])->name('jadwal.upload');
-    Route::get('jadwal/download', [JadwalKerjaController::class, 'download'])->name('jadwal.download');
+    Route::get('/jadwal-kerja', [JadwalKerjaController::class, 'index'])->name('jadwal.index');
+//    Route::get('/jadwal/download', [JadwalKerjaController::class, 'download'])->name('jadwal.download');
+
+    Route::middleware(['auth', 'role:admin'])->group(function () {
+        Route::post('/jadwal/import', [JadwalKerjaController::class, 'import'])->name('import.jadwal');
+        Route::delete('/jadwal/delete-all', [JadwalKerjaController::class, 'deleteAll'])->name('jadwal.deleteAll');
+        Route::post('/jadwal/delete/{id}', [JadwalKerjaController::class, 'delete'])->name('jadwal.delete');
+        Route::post('/jadwal/update/{id}', [JadwalKerjaController::class, 'update'])->name('jadwal.update');
+    });
 });

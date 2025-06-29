@@ -33,11 +33,22 @@ class JadwalKerjaController extends Controller
 
     public function update(Request $request, $id)
     {
+        $request->validate([
+            'karyawan' => 'required|string|max:100',
+            'tanggal' => 'required|date',
+            'shift' => 'required|string|max:50',
+        ]);
+
         $jadwal = JadwalKerja::find($id);
         if ($jadwal) {
-            $jadwal->update($request->all());
+            $jadwal->update([
+                'karyawan' => $request->karyawan,
+                'tanggal' => $request->tanggal,
+                'shift' => $request->shift,
+            ]);
             return redirect()->route('jadwal.index')->with('success', 'Jadwal kerja berhasil diperbarui.');
         }
+
         return redirect()->route('jadwal.index')->with('error', 'Jadwal kerja tidak ditemukan.');
     }
 
@@ -58,7 +69,26 @@ class JadwalKerjaController extends Controller
 
     public function read()
     {
-        $jadwalKerja = JadwalKerja::all();
+        $userId = auth()->user()->id;
+        $jadwalKerja = JadwalKerja::where('user_id', $userId)->get();
         return view('jadwal.read', compact('jadwalKerja'));
     }
+
+    public function import(request $request)
+    {
+        $file = $request->file('file');
+        $name_file = $file->getClientOriginalName();
+        $file->move('Jadwal Kerja', $name_file);
+
+        Excel::import(new JadwalKerjaImport, public_path('/Jadwal Kerja/' . $name_file));
+        return redirect()->route('jadwal.index')->with('success', 'Jadwal kerja berhasil diimport.');
+    }
+
+    public function deleteAll()
+    {
+        JadwalKerja::truncate();
+        return redirect()->route('jadwal.index')->with('success', 'Semua jadwal kerja berhasil dihapus.');
+    }
+
+
 }

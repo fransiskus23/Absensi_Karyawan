@@ -8,7 +8,7 @@ class JadwalKerja extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['user_id', 'tanggal', 'shift'];
+    protected $fillable = ['karyawan', 'tanggal', 'shift'];
 
     // Relasi ke tabel users
     public function user()
