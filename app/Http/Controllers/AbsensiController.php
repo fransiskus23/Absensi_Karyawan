@@ -81,7 +81,7 @@ class AbsensiController extends Controller
 
         $now = Carbon::now();
 
-        if ($now->lessThan(Carbon::today()->addHours(12))) {
+        if ($now->lessThan(Carbon::today()->addHours(17))) {
             return redirect()->back()->with('error', 'Check-Out hanya bisa dilakukan setelah jam 17:00.');
         }
 
